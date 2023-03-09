@@ -43,11 +43,11 @@ namespace PruebaIntcomexApi.Controllers
         }
 
         [HttpGet("{cargo}")]
-        public async Task<IActionResult> getCargo(string cargo)
+        public async Task<IActionResult> getCargo(int cargo)
         {
             try
             {
-                Cargo obj = await new ManejadorCargo(_db).findByCargo(cargo);
+                Cargo obj = await new ManejadorCargo(_db).findByID(cargo);
                 if (obj == null)
                 {
                     return NotFound();

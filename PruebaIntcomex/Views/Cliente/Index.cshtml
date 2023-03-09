@@ -5,7 +5,7 @@
 <div class="text-center">
     <h1 class="display-4">Welcome Cliente-Area</h1>
 
-    <input type="button" class="btn btn-success btn-block" value="Crear" data-toggle="modal" data-target="#exampleModal" />
+    <input type="button" class="btn btn-success btn-block" value="Crear" onclick="gestionarCliente(this.value)" />
     <button type="button" class="btn btn-info btn-block" onclick="showFindClients()" id="btnconsultar" disabled>Consultar</button>
 
     <table class="table table-responsive table-bordered" id="myDynamicTable" style="display:none">
@@ -29,12 +29,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo cliente</h5>
+                <h5 class="modal-title" id="ModalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="clienteid" name="clienteid" value="">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <input type="text" class="form-control" id="nombre" placeholder="Escriba el nombre completo" aria-label="Nombre" aria-describedby="basic-addon1" required="required">
@@ -47,21 +48,21 @@
                     <div class="form-group col-md-6">
                         <input type="text" class="form-control" id="telefono" placeholder="Telefono" onkeypress="return valideKey(event);" />
                     </div>
-                    <div class="form-group col-md-6">                        
+                    <div class="form-group col-md-6">
                         <select id="userselect" class="form-control" placeholder="Usuario">
                             <option selected value="">Usuario...</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">                        
+                    <div class="form-group col-md-6">
                         <select id="cargoselect" class="form-control" placeholder="Cargo">
                             <option selected value="">Cargo...</option>
                         </select>
                     </div>
                     <div class="form-group col-md-6">
                         <select id="tpselect" class="form-control" placeholder="TipoContacto">
-                            <option selected value="">TipoContacto...</option>                           
+                            <option selected value="">TipoContacto...</option>
                         </select>
                     </div>
                 </div>
@@ -93,6 +94,10 @@
             document.getElementById("myDynamicTable").setAttribute("style", "display:block");            
         }
         function validateFormSave() {
+
+            var view = document.getElementById('ModalLabel').innerHTML;
+            console.log('La vista es---->' + view);
+
             document.getElementById("resultErrorClient").innerHTML = '';
             document.getElementById("resultErrorClientDiv").setAttribute("style", "display:none");
 
@@ -127,7 +132,32 @@
                 document.getElementById("resultErrorClientDiv").setAttribute("style", "display:block");
                 document.getElementById("resultErrorClient").innerHTML = errorMessage;
             } else {
-                saveClient(inputNombre, inputEmail, inputTelefono, inputUser, inputCargo, inputTP);
+                if (view.toUpperCase().includes('CREAR')) {
+                    saveClient(inputNombre, inputEmail, inputTelefono, inputUser, inputCargo, inputTP);
+                } else if (view.toUpperCase().includes('ACTUALIZAR')) {
+                    updateClient(inputNombre, inputEmail, inputTelefono, inputUser, inputCargo, inputTP);
+                }
+                
+            }
+        }
+
+        function gestionarCliente(value) {
+
+            if (value == 'Crear') {
+                document.getElementById("ModalLabel").innerHTML = 'Crear usuario';
+                document.getElementById("nombre").value = '';
+                document.getElementById("email").value = '';
+                document.getElementById("telefono").value = '';
+                document.getElementById("userselect").value = '';
+                document.getElementById("cargoselect").value = '';
+                document.getElementById("tpselect").value ='';
+                document.getElementById("clienteid").value ='';
+                $('#exampleModal').modal('show');
+            }
+            if (typeof value == 'number') {
+                document.getElementById("ModalLabel").innerHTML = 'Actualizar usuario';
+                getCliente(value);
+                $('#exampleModal').modal('show');
             }
         }
 

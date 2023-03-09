@@ -41,11 +41,11 @@ namespace PruebaIntcomexApi.Controllers
         }
 
         [HttpGet("{tipo}")]
-        public async Task<IActionResult> getTipoContacto(string tipo)
+        public async Task<IActionResult> getTipoContacto(int tipo)
         {
             try
             {
-                TipoContacto obj = await new ManejadorTipoContacto(_db).findByTipo(tipo);
+                TipoContacto obj = await new ManejadorTipoContacto(_db).findByID(tipo);
                 if (obj == null)
                 {
                     return NotFound();

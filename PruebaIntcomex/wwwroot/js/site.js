@@ -1,5 +1,4 @@
-﻿console.log('Archivo site.js--------->');
-const _URLSERVICE = "https://localhost:44378/";
+﻿const _URLSERVICE = "https://localhost:44378/";
 const _URLSERVICE_USER = _URLSERVICE + "api/Usuario";
 const _URLSERVICE_GETUSER = _URLSERVICE + "api/Usuario/";
 const _URLSERVICE_TIPOCONT = _URLSERVICE + "api/TipoContacto";
@@ -79,7 +78,7 @@ async function getallClients() {
                <td>${nametp}</td>
                <td>
                 <button class="btn btn-danger" value="${value.codigoCliente}" onclick="InactiveCliente(this.value)">Inactivar</button>
-                <button class="btn btn-info" value="${value.codigoCliente}" disabled>Actualizar</button>
+                <button class="btn btn-info" value="${value.codigoCliente}" onclick="gestionarCliente(Number(this.value))">Actualizar</button>
                 </td>
             </tr>`
             );
@@ -106,7 +105,7 @@ async function getallCargos(view) {
                    <td>${value.nombreCargo}</td>
                    <td>
                    <button class="btn btn-danger" value="${value.idCargo}" onclick="InactiveCargo(this.value)">Inactivar</button>
-                   <button class="btn btn-info" value="${value.idCargo}" disabled>Actualizar</button>
+                   <button class="btn btn-info" value="${value.idCargo}" onclick="gestionarCargo(Number(this.value))">Actualizar</button>
                    </td>
                 </tr>`
                 );
@@ -149,7 +148,7 @@ async function getallTiposCont(view) {
                <td>${value.nombreTipoContacto}</td>
                <td>
                 <button class="btn btn-danger" value="${value.idTipoContacto}" onclick="InactiveTP(this.value)">Inactivar</button>
-                <button class="btn btn-info" value="${value.idTipoContacto}" disabled>Actualizar</button>
+                <button class="btn btn-info" value="${value.idTipoContacto}" onclick="gestionarTP(Number(this.value))">Actualizar</button>
                 </td>
             </tr>`
                 );
@@ -374,4 +373,206 @@ function getUser(user) {
         console.error("Error:", error);
     });
     
+}
+
+function getCargo(cargo) {
+    console.log("el getCargo es " + cargo);
+    fetch(_URLSERVICE_GETCARGO + cargo, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    }).then(function (response) {
+        return response.json();
+    }).then(function (Data) {
+        console.log('getCargo resultado--->' + Data.nombreCargo);
+        document.getElementById('cargo').value = Data.nombreCargo;
+        document.getElementById('cargoid').value = cargo;
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
+
+}
+
+function getTP(tp) {
+    console.log("el getTP es " + tp);
+    fetch(_URLSERVICE_GETTIPOCONT + tp, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    }).then(function (response) {
+        return response.json();
+    }).then(function (Data) {
+        console.log('getTP resultado--->' + Data.nombreTipoContacto);
+        document.getElementById('tp').value = Data.nombreTipoContacto;
+        document.getElementById('tpid').value = tp;
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
+
+}
+
+function getCliente(id) {
+    console.log("el getCliente es " + id);
+    fetch(_URLSERVICE_GETCLIENTE + id, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        }
+    }).then(function (response) {
+        return response.json();
+    }).then(function (Data) {
+
+        console.log('getCliente resultado--->',Data);
+        document.getElementById('clienteid').value = id;
+        document.getElementById("nombre").value = Data.nombreCompleto;
+        document.getElementById("email").value = Data.correoElectronico;
+        document.getElementById("telefono").value = Data.telefono;
+        document.getElementById("userselect").value = Data.idUsuario;
+        document.getElementById("cargoselect").value = Data.idCargo;
+        document.getElementById("tpselect").value = Data.idTipoContacto;
+
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
+
+}
+
+function updateUser() {
+
+    var user = document.getElementById('user').value;
+    var iduser = document.getElementById('userid').value;
+
+    console.log("el updateUser user es  " + user + " el iduser es " + iduser);
+    fetch(_URLSERVICE_GETUSER + Number(iduser), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify({ nombreUsuario: user })
+    }).then(function (response) {
+        if (response.ok) {
+            console.log("Respuesta valida->" + response.statusText);            
+            document.getElementById('user').value = '';
+            document.getElementById('userid').value = '';
+            document.getElementById("ModalLabel").innerHTML = '';
+            getallUser('users');
+            document.getElementById("myDynamicTableUsers").setAttribute("style", "display:block");
+            $('#exampleModal').modal('hide');
+        } else {
+            console.error("Error:", response.statusText);
+        }
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
+
+}
+
+function updateCargo() {
+
+    var cargo = document.getElementById('cargo').value;
+    var cargoid = document.getElementById('cargoid').value;
+
+    console.log("el updateCargo cargo es  " + cargo + " el cargoid es " + cargoid);
+    fetch(_URLSERVICE_GETCARGO + Number(cargoid), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify({ nombreCargo: cargo })
+    }).then(function (response) {
+        if (response.ok) {
+            console.log("Respuesta valida->" + response.statusText);
+            document.getElementById('cargo').value = '';
+            document.getElementById('cargoid').value = '';
+            document.getElementById("ModalLabel").innerHTML = '';
+            getallCargos('cargos');
+            document.getElementById("myDynamicTableCargos").setAttribute("style", "display:block");
+            $('#exampleModal').modal('hide');
+        } else {
+            console.error("Error:", response.statusText);
+        }
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
+
+}
+
+function updateTP() {
+
+    var tp = document.getElementById('tp').value;
+    var tpid = document.getElementById('tpid').value;
+
+    console.log("el updateTP tp es  " + tp + " el tpid es " + tpid);
+    fetch(_URLSERVICE_GETTIPOCONT + Number(tpid), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify({ nombreTipoContacto: tp })
+    }).then(function (response) {
+        if (response.ok) {
+            console.log("Respuesta valida->" + response.statusText);
+            document.getElementById('tp').value = '';
+            document.getElementById('tpid').value = '';
+            document.getElementById("ModalLabel").innerHTML = '';
+            getallTiposCont('tps');
+            document.getElementById("myDynamicTableTP").setAttribute("style", "display:block");
+            $('#exampleModal').modal('hide');
+        } else {
+            console.error("Error:", response.statusText);
+        }
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
+
+}
+
+function updateClient(inputNombre, inputEmail, inputTelefono, inputUser, inputCargo, inputTP) {
+
+    var clienteid = document.getElementById('clienteid').value;
+
+    console.log("el updateClient el clienteid es " + clienteid);
+    fetch(_URLSERVICE_GETCLIENTE + Number(clienteid), {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*"
+        },
+        body: JSON.stringify({
+            nombreCompleto: inputNombre,
+            telefono: Number(inputTelefono),
+            correoElectronico: inputEmail,
+            idUsuario: Number(inputUser),
+            idCargo: Number(inputCargo),
+            idTipoContacto: Number(inputTP)
+        })
+    }).then(function (response) {
+        if (response.ok) {
+            console.log("Respuesta valida->" + response.statusText);
+            document.getElementById("nombre").value = '';
+            document.getElementById("email").value = '';
+            document.getElementById("telefono").value = '';
+            document.getElementById("userselect").value = '';
+            document.getElementById("cargoselect").value = '';
+            document.getElementById("tpselect").value = '';
+            document.getElementById("clienteid").value = '';
+            document.getElementById("ModalLabel").innerHTML = '';
+            getallClients();
+            document.getElementById("myDynamicTable").setAttribute("style", "display:block");
+            $('#exampleModal').modal('hide');
+        } else {
+            console.error("Error:", response.statusText);
+        }
+    }).catch((error) => {
+        console.error("Error:", error);
+    });
+
 }

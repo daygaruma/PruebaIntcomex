@@ -4,7 +4,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome TipoContacto-Area</h1>
-    <input type="button" class="btn btn-success btn-block" value="Crear" data-toggle="modal" data-target="#exampleModal" />
+    <input type="button" class="btn btn-success btn-block" value="Crear" onclick="gestionarTP(this.value)" />
     <button type="button" class="btn btn-info btn-block" onclick="showFindTP()">Consultar</button>
     <br />
     <table class="table table-responsive table-bordered" id="myDynamicTableTP" style="display:none">
@@ -22,7 +22,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo tipo de contacto</h5>
+                <h5 class="modal-title" id="ModalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -34,7 +34,7 @@
                             <span class="input-group-text" id="basic-addon1"> &#64; </span>
                         </div>
                         <input type="text" class="form-control" id="tp" placeholder="Escriba el tipo de contacto" aria-label="Username" aria-describedby="basic-addon1" required="required">
-
+                        <input type="hidden" id="tpid" name="tpid" value="">
                     </div>
                     <div class="input-group mb-3" id="resultErrorTPDiv" style="display:none">
                         <p class="text-sm-start text-danger" id="resultErrorTP"></p>
@@ -59,10 +59,14 @@
         function showFindTP() {
             document.getElementById("myDynamicTableTP").setAttribute("style", "display:block");
         }
+
         function guardar() {
+            var view = document.getElementById('ModalLabel').innerHTML;
+            console.log('La vista es---->' + view);
 
             var val = document.getElementById('tp').value;
             document.getElementById("myDynamicTableTP").setAttribute("style", "display:none");
+
             if (val === '' || val.length == 0) {
                 console.log('tipo de contacto vacio');
                 document.getElementById("resultErrorTPDiv").setAttribute("style", "display:block");
@@ -70,7 +74,27 @@
             } else if (val !== undefined) {
                 document.getElementById("resultErrorTP").innerHTML = '';
                 document.getElementById("resultErrorTPDiv").setAttribute("style", "display:none");
-                saveTP(val);
+                
+                if (view.toUpperCase().includes('CREAR')) {
+                    saveTP(val);
+                } else if (view.toUpperCase().includes('ACTUALIZAR')) {
+                    updateTP();
+                }
+            }
+        }
+
+        function gestionarTP(value) {
+
+            if (value == 'Crear') {
+                document.getElementById("ModalLabel").innerHTML = 'Crear tipo de contacto';
+                document.getElementById("tp").value = '';
+                document.getElementById('tpid').value = '';
+                $('#exampleModal').modal('show');
+            }
+            if (typeof value == 'number') {
+                document.getElementById("ModalLabel").innerHTML = 'Actualizar tipo de contacto';
+                getTP(value);
+                $('#exampleModal').modal('show');
             }
         }
     </script>

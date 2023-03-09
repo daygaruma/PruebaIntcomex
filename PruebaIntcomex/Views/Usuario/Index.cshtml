@@ -62,7 +62,8 @@
             document.getElementById("myDynamicTableUsers").setAttribute("style", "display:block");
         }
         function guardar() {
-            var view = document.getElementById('ModalLabel').value;
+
+            var view = document.getElementById('ModalLabel').innerHTML;
             console.log('La vista es---->' + view);
             var val = document.getElementById('user').value;
             document.getElementById("myDynamicTableUsers").setAttribute("style", "display:none");
@@ -76,18 +77,19 @@
                 document.getElementById("resultErrorUser").innerHTML = '';
                 document.getElementById("resultErrorUserDiv").setAttribute("style", "display:none");
                 if (view.toUpperCase().includes('CREAR')) {
-                    //saveUsers(val);
+                    saveUsers(val);
                 } else if (view.toUpperCase().includes('ACTUALIZAR')) {
-
+                    updateUser();
                 }
                 
             }
         }
         function gestionarUser(value) {
-            console.log('el tipe of es: ',typeof value);
+
             if (value == 'Crear') {
                 document.getElementById("ModalLabel").innerHTML = 'Crear usuario';
-                document.getElementById("user").innerHTML = '';
+                document.getElementById("user").value = '';
+                document.getElementById('userid').value = '';
                 $('#exampleModal').modal('show');
             }
             if (typeof value == 'number') {

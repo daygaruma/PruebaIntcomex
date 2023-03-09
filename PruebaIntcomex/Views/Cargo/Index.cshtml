@@ -4,7 +4,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome Cargos-Area</h1>
-    <input type="button" class="btn btn-success btn-block" value="Crear" data-toggle="modal" data-target="#exampleModal" />
+    <input type="button" class="btn btn-success btn-block" value="Crear" onclick="gestionarCargo(this.value)" />
     <button type="button" class="btn btn-info btn-block" onclick="showFindCargos()">Consultar</button>
     <br />
     <table class="table table-responsive table-bordered" id="myDynamicTableCargos" style="display:none">
@@ -24,7 +24,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo cargo</h5>
+                <h5 class="modal-title" id="ModalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -36,7 +36,7 @@
                             <span class="input-group-text" id="basic-addon1"> &#64; </span>
                         </div>
                         <input type="text" class="form-control" id="cargo" placeholder="Escriba el nombre de cargo" aria-label="Username" aria-describedby="basic-addon1" required="required">
-
+                        <input type="hidden" id="cargoid" name="cargoid" value="">
                     </div>
                     <div class="input-group mb-3" id="resultErrorCargoDiv" style="display:none">
                         <p class="text-sm-start text-danger" id="resultErrorCargo"></p>
@@ -62,10 +62,15 @@
         function showFindCargos() {
             document.getElementById("myDynamicTableCargos").setAttribute("style", "display:block");
         }
+
         function guardar() {
 
+            var view = document.getElementById('ModalLabel').innerHTML;
+            console.log('La vista es---->' + view);
+            
             var val = document.getElementById('cargo').value;
             document.getElementById("myDynamicTableCargos").setAttribute("style", "display:none");
+
             if (val === '' || val.length == 0) {
                 console.log('cargo vacio');
                 document.getElementById("resultErrorCargoDiv").setAttribute("style", "display:block");
@@ -73,7 +78,26 @@
             } else if (val !== undefined) {
                 document.getElementById("resultErrorCargo").innerHTML = '';
                 document.getElementById("resultErrorCargoDiv").setAttribute("style", "display:none");
-                saveCargos(val);
+                if (view.toUpperCase().includes('CREAR')) {
+                    saveCargos(val);
+                } else if (view.toUpperCase().includes('ACTUALIZAR')) {
+                    updateCargo();
+                }
+            }
+        }
+
+        function gestionarCargo(value) {
+
+            if (value == 'Crear') {
+                document.getElementById("ModalLabel").innerHTML = 'Crear cargo';
+                document.getElementById("cargo").value = '';
+                document.getElementById('cargoid').value = '';
+                $('#exampleModal').modal('show');
+            }
+            if (typeof value == 'number') {
+                document.getElementById("ModalLabel").innerHTML = 'Actualizar cargo';
+                getCargo(value);
+                $('#exampleModal').modal('show');
             }
         }
     </script>
