@@ -1,0 +1,135 @@
+﻿@{
+    ViewData["Title"] = "Cliente Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome Cliente-Area</h1>
+
+    <input type="button" class="btn btn-success btn-block" value="Crear" data-toggle="modal" data-target="#exampleModal" />
+    <button type="button" class="btn btn-info btn-block" onclick="showFindClients()" id="btnconsultar" disabled>Consultar</button>
+
+    <table class="table table-responsive table-bordered" id="myDynamicTable" style="display:none">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Correo Electronico</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Cargo</th>
+                <th scope="col">Tipo de Contacto</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" id="nombre" placeholder="Escriba el nombre completo" aria-label="Nombre" aria-describedby="basic-addon1" required="required">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input type="email" class="form-control" id="email" placeholder="correo@ejemplo.com" required="required">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" id="telefono" placeholder="Telefono" onkeypress="return valideKey(event);" />
+                    </div>
+                    <div class="form-group col-md-6">                        
+                        <select id="userselect" class="form-control" placeholder="Usuario">
+                            <option selected value="">Usuario...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">                        
+                        <select id="cargoselect" class="form-control" placeholder="Cargo">
+                            <option selected value="">Cargo...</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <select id="tpselect" class="form-control" placeholder="TipoContacto">
+                            <option selected value="">TipoContacto...</option>                           
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group mb-3" id="resultErrorClientDiv" style="display:none">
+                    <p class="text-sm-start text-danger" id="resultErrorClient"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" onclick="validateFormSave()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        window.onload = async function () {           
+            await getallCargos('cliente');
+            await getallUser('cliente');
+            await getallTiposCont('cliente');
+            await getallClients();
+            console.log('Termina ejecucion--->');
+        };
+
+        function showFindClients() {
+            
+            document.getElementById("myDynamicTable").setAttribute("style", "display:block");            
+        }
+        function validateFormSave() {
+            document.getElementById("resultErrorClient").innerHTML = '';
+            document.getElementById("resultErrorClientDiv").setAttribute("style", "display:none");
+
+            var inputNombre = document.getElementById("nombre").value;
+            var inputEmail = document.getElementById("email").value;
+            var inputTelefono = document.getElementById("telefono").value;
+            var inputUser = document.getElementById("userselect").value;
+            var inputCargo = document.getElementById("cargoselect").value;
+            var inputTP = document.getElementById("tpselect").value;
+            var errorMessage = '';
+
+            if (inputNombre == '') {
+                errorMessage += "Nombre vacio<br>";
+            }
+            if (inputEmail == '') {
+                errorMessage += "Email vacio<br>";
+            }
+            if (inputTelefono == '') {
+                errorMessage += "Telefono vacio<br>";
+            }
+            if (inputUser == '') {
+                errorMessage += "Usuario vacio<br>";
+            }
+            if (inputCargo == '') {
+                errorMessage += "Cargo vacio<br>";
+            }
+            if (inputTP == '') {
+                errorMessage += "TipoContacto vacio<br>";
+            }
+
+            if (errorMessage !== '') {
+                document.getElementById("resultErrorClientDiv").setAttribute("style", "display:block");
+                document.getElementById("resultErrorClient").innerHTML = errorMessage;
+            } else {
+                saveClient(inputNombre, inputEmail, inputTelefono, inputUser, inputCargo, inputTP);
+            }
+        }
+
+    </script>
+}

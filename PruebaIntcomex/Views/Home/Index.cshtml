@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <br />
+    <input type="button" class="btn btn-success btn-block" value="Gestión de usuarios" onclick="@("window.location.href='" + @Url.Action("Index", "Usuario") + "'");" />
+    <input type="button" class="btn btn-primary btn-block" value="Gestión de clientes" onclick="@("window.location.href='" + @Url.Action("Index", "Cliente") + "'");" />
+    <input type="button" class="btn btn-warning btn-block" value="Gestión de cargos" onclick="@("window.location.href='" + @Url.Action("Index", "Cargo") + "'");" />
+    <input type="button" class="btn btn-info btn-block" value="Gestión tipos de contacto" onclick="@("window.location.href='" + @Url.Action("Index", "TipoContacto") + "'");" />
+</div>

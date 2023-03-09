@@ -1,0 +1,101 @@
+﻿@{
+    ViewData["Title"] = "User Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome User-Area</h1>
+    <input type="button" class="btn btn-success btn-block" value="Crear" onclick="gestionarUser(this.value)" />
+    <button type="button" class="btn btn-info btn-block" onclick="showFindUsers()">Consultar</button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"> &#64; </span>
+                        </div>
+                        <input type="text" class="form-control" id="user" placeholder="Escriba el Username" aria-label="Username" aria-describedby="basic-addon1" required="required">
+                        <input type="hidden" id="userid" name="userid" value="">
+
+                    </div>
+                    <div class="input-group mb-3" id="resultErrorUserDiv" style="display:none">
+                        <p class="text-sm-start text-danger" id="resultErrorUser"></p>
+                    </div>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table id="myDynamicTableUsers" style="display:none" class="table table-responsive table-bordered" >
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">NombreUsuario</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody id="tableBodyUsers">
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        window.onload = function () {
+            getallUser('users');
+        };
+
+        function showFindUsers() {
+            document.getElementById("myDynamicTableUsers").setAttribute("style", "display:block");
+        }
+        function guardar() {
+            var view = document.getElementById('ModalLabel').value;
+            console.log('La vista es---->' + view);
+            var val = document.getElementById('user').value;
+            document.getElementById("myDynamicTableUsers").setAttribute("style", "display:none");
+
+            if (val === '' || val.length == 0)
+            {
+                console.log('User vacio');
+                document.getElementById("resultErrorUserDiv").setAttribute("style", "display:block");
+                document.getElementById("resultErrorUser").innerHTML = "El usuario no puede ser vacio";
+            } else if (val !== undefined) {
+                document.getElementById("resultErrorUser").innerHTML = '';
+                document.getElementById("resultErrorUserDiv").setAttribute("style", "display:none");
+                if (view.toUpperCase().includes('CREAR')) {
+                    //saveUsers(val);
+                } else if (view.toUpperCase().includes('ACTUALIZAR')) {
+
+                }
+                
+            }
+        }
+        function gestionarUser(value) {
+            console.log('el tipe of es: ',typeof value);
+            if (value == 'Crear') {
+                document.getElementById("ModalLabel").innerHTML = 'Crear usuario';
+                document.getElementById("user").innerHTML = '';
+                $('#exampleModal').modal('show');
+            }
+            if (typeof value == 'number') {
+                document.getElementById("ModalLabel").innerHTML = 'Actualizar usuario';
+                getUser(value);
+                $('#exampleModal').modal('show');
+            }
+        }
+        
+    </script>
+}

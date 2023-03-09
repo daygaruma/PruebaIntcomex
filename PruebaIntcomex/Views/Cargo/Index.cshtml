@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Cargos Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome Cargos-Area</h1>
+    <input type="button" class="btn btn-success btn-block" value="Crear" data-toggle="modal" data-target="#exampleModal" />
+    <button type="button" class="btn btn-info btn-block" onclick="showFindCargos()">Consultar</button>
+    <br />
+    <table class="table table-responsive table-bordered" id="myDynamicTableCargos" style="display:none">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">NombreCargo</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tableBodyCargos">
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo cargo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1"> &#64; </span>
+                        </div>
+                        <input type="text" class="form-control" id="cargo" placeholder="Escriba el nombre de cargo" aria-label="Username" aria-describedby="basic-addon1" required="required">
+
+                    </div>
+                    <div class="input-group mb-3" id="resultErrorCargoDiv" style="display:none">
+                        <p class="text-sm-start text-danger" id="resultErrorCargo"></p>
+                    </div>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" onclick="guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script type="text/javascript">
+        window.onload = function () {
+            getallCargos('cargos');
+        };
+
+        function showFindCargos() {
+            document.getElementById("myDynamicTableCargos").setAttribute("style", "display:block");
+        }
+        function guardar() {
+
+            var val = document.getElementById('cargo').value;
+            document.getElementById("myDynamicTableCargos").setAttribute("style", "display:none");
+            if (val === '' || val.length == 0) {
+                console.log('cargo vacio');
+                document.getElementById("resultErrorCargoDiv").setAttribute("style", "display:block");
+                document.getElementById("resultErrorCargo").innerHTML = "El nombre de cargo no puede ser vacio";
+            } else if (val !== undefined) {
+                document.getElementById("resultErrorCargo").innerHTML = '';
+                document.getElementById("resultErrorCargoDiv").setAttribute("style", "display:none");
+                saveCargos(val);
+            }
+        }
+    </script>
+}
